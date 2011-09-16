@@ -7,151 +7,176 @@
 
 <dependencies>
 
-<dependency>
-   <groupId>org.jdom</groupId>
-   <artifactId>jdom</artifactId>
-   <version>1.1</version>
-</dependency>
+    <dependency>
+	<groupId>org.jdom</groupId>
+	<artifactId>jdom</artifactId>
+	<version>1.1</version>
+	<scope>provided</scope>
+    </dependency>
 
-<dependency>
-    <groupId>commons-codec</groupId>
-    <artifactId>commons-codec</artifactId>
-    <version>1.4</version>
-</dependency>
+    <dependency>
+	<groupId>commons-codec</groupId>
+	<artifactId>commons-codec</artifactId>
+	<version>1.4</version>
+	<scope>provided</scope>
+    </dependency>
 
-<dependency>
-   <groupId>org.bouncycastle</groupId>
-   <artifactId>bcmail-jdk15</artifactId>
-   <version>1.44</version>
+    <dependency>
+	<groupId>org.bouncycastle</groupId>
+	<artifactId>bcmail-jdk15</artifactId>
+	<version>1.44</version>
+	<scope>provided</scope>
    </dependency>                                                                        
 
 
-<dependency>
-    <groupId>org.bouncycastle</groupId>
-    <artifactId>bcprov-jdk15</artifactId>
-    <version>1.44</version>
-</dependency>
+    <dependency>
+	<groupId>org.bouncycastle</groupId>
+	<artifactId>bcprov-jdk15</artifactId>
+	<version>1.44</version>
+	<scope>provided</scope>
+    </dependency>
 
-<dependency>
-    <groupId>log4j</groupId>
-    <artifactId>log4j</artifactId>
-    <version>1.2.16</version>
-</dependency>
+    <dependency>
+	<groupId>log4j</groupId>
+	<artifactId>log4j</artifactId>
+	<version>1.2.16</version>
+	<scope>provided</scope>
+    </dependency>
 
-<dependency>
-      <groupId>org.twitter4j</groupId>
-      <artifactId>twitter4j-core</artifactId>
-      <version>2.1.8</version>
-</dependency>
+    <dependency>
+        <groupId>org.twitter4j</groupId>
+        <artifactId>twitter4j-core</artifactId>
+        <version>2.1.8</version>
+        <scope>provided</scope>
+    </dependency>
 
-<dependency>
-      <groupId>net.sourceforge.saxon</groupId>
-      <artifactId>saxonhe</artifactId>
-      <version>9.2.1.5</version>
-</dependency>
+    <dependency>
+        <groupId>net.sourceforge.saxon</groupId>
+        <artifactId>saxonhe</artifactId>
+        <version>9.2.1.5</version>
+        <scope>provided</scope>
+    </dependency>
 
-<dependency>
-    <groupId>org.hibernate</groupId>
-    <artifactId>hibernate</artifactId>
-    <version>3.2.1.ga</version>
-    <type>jar</type>
-</dependency>
+    <dependency>
+	<groupId>org.hibernate</groupId>
+	<artifactId>hibernate</artifactId>
+	<version>3.2.1.ga</version>
+	<type>jar</type>
+	<scope>provided</scope>
+    </dependency>
 
-<dependency>
+    <dependency>
         <groupId>commons-lang</groupId>
         <artifactId>commons-lang</artifactId>
         <version>2.3</version>
-    </dependency>
-
-       <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-            <version>2.4</version>
-        </dependency>
-
-<dependency>
-    <groupId>javax.mail</groupId>
-    <artifactId>mail</artifactId>
-    <version>1.4</version>
-</dependency>
-
- <dependency>
-      <groupId>org.codemonkey.simplejavamail</groupId>
-      <artifactId>simple-java-mail</artifactId>
-      <version>2.0</version>
+	<scope>provided</scope>
     </dependency>
 
     <dependency>
-            <groupId>javax.faces</groupId>
-            <artifactId>jsf-impl</artifactId>
-            <version>1.2</version>
+        <groupId>javax.servlet</groupId>
+        <artifactId>servlet-api</artifactId>
+        <version>2.4</version>
+	<scope>provided</scope>
     </dependency>
 
     <dependency>
-            <groupId>javax.faces</groupId>
-            <artifactId>jsf-api</artifactId>
-            <version>1.2</version>
+	<groupId>javax.mail</groupId>
+	<artifactId>mail</artifactId>
+	<version>1.4</version>
+	<scope>provided</scope>
+    </dependency>
+
+    <dependency>
+	<groupId>org.codemonkey.simplejavamail</groupId>
+        <artifactId>simple-java-mail</artifactId>
+        <version>2.0</version>
+	<scope>provided</scope>
+    </dependency>
+
+    <dependency>
+        <groupId>javax.faces</groupId>
+        <artifactId>jsf-impl</artifactId>
+        <version>1.2</version>
+	<scope>provided</scope>
+    </dependency>
+
+    <dependency>
+        <groupId>javax.faces</groupId>
+        <artifactId>jsf-api</artifactId>
+        <version>1.2</version>
+	<scope>provided</scope>
     </dependency>
 
    <dependency> 
-                <groupId>com.sun.rave</groupId>
-                <artifactId>webui</artifactId>
-                <version>1.0</version>
+        <groupId>com.sun.rave</groupId>
+        <artifactId>webui</artifactId>
+        <version>1.0</version>
+	<scope>provided</scope>
     </dependency>
 
    <dependency> 
-                <groupId>com.sun.rave.web.ui</groupId>
-                <artifactId>appbase</artifactId>
-                <version>1.0</version>
-    </dependency>
-
-  <dependency>
-      <groupId>commons-beanutils</groupId>
-      <artifactId>commons-beanutils</artifactId>
-      <version>1.7.0</version>
+        <groupId>com.sun.rave.web.ui</groupId>
+        <artifactId>appbase</artifactId>
+        <version>1.0</version>
+	<scope>provided</scope>
     </dependency>
 
     <dependency>
-      <groupId>xerces</groupId>
-      <artifactId>xercesImpl</artifactId>
-      <version>2.2.1</version>
+        <groupId>commons-beanutils</groupId>
+        <artifactId>commons-beanutils</artifactId>
+    	<version>1.7.0</version>
+	<scope>provided</scope>
     </dependency>
 
-  <dependency>
-      <groupId>org.eclipse.emf</groupId>
-      <artifactId>ecore</artifactId>
-      <version>2.1.0</version>
+    <dependency>
+        <groupId>xerces</groupId>
+        <artifactId>xercesImpl</artifactId>
+        <version>2.2.1</version>
+	<scope>provided</scope>
     </dependency>
 
-<dependency>
-  <groupId>org.apache.ws</groupId>
-  <artifactId>wsif</artifactId>
-  <version>2.0.1_IB3</version>
-</dependency>
+    <dependency>
+        <groupId>org.eclipse.emf</groupId>
+        <artifactId>ecore</artifactId>
+        <version>2.1.0</version>
+	<scope>provided</scope>
+    </dependency>
 
-<dependency>
-    <groupId>wsdl4j</groupId>
-    <artifactId>wsdl4j</artifactId>
-    <version>1.6.2</version>
-</dependency>
+    <dependency>
+	<groupId>org.apache.ws</groupId>
+	<artifactId>wsif</artifactId>
+	<version>2.0.1_IB3</version>
+	<scope>provided</scope>
+    </dependency>
 
-<dependency>
-    <groupId>org.eclipse.emf</groupId>
-    <artifactId>org.eclipse.emf.common</artifactId>
-    <version>2.6.0.v20100614-1136</version>
-</dependency>
+    <dependency>
+	<groupId>wsdl4j</groupId>
+	<artifactId>wsdl4j</artifactId>
+	<version>1.6.2</version>
+	<scope>provided</scope>
+    </dependency>
+
+    <dependency>
+	<groupId>org.eclipse.emf</groupId>
+	<artifactId>org.eclipse.emf.common</artifactId>
+	<version>2.6.0.v20100614-1136</version>
+	<scope>provided</scope>
+    </dependency>
 
      <dependency>
-                <groupId>org.eclipse.xsd</groupId>
-                <artifactId>xsd</artifactId>
-                <version>2.2.3</version>
-            </dependency>
-
-   <dependency>
-      <groupId>net.sf.saxon</groupId>
-      <artifactId>saxon-jdom</artifactId>
-      <version>8.7</version>
+        <groupId>org.eclipse.xsd</groupId>
+        <artifactId>xsd</artifactId>
+        <version>2.2.3</version>
+	<scope>provided</scope>
     </dependency>
+
+    <dependency>
+	<groupId>net.sf.saxon</groupId>
+        <artifactId>saxon-jdom</artifactId>
+        <version>8.7</version>
+	<scope>provided</scope>
+    </dependency>
+
 </dependencies>
 
     <build>

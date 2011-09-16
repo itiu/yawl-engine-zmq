@@ -35,189 +35,195 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.Enumeration;
 
-
 /**
- * An API between the YAWL Engine and custom services for the management of processes
- * and users.
- *
- * @author Lachlan Aldred
- * Date: 22/12/2003
- * Time: 12:03:41
- *
+ * An API between the YAWL Engine and custom services for the management of
+ * processes and users.
+ * 
+ * @author Lachlan Aldred Date: 22/12/2003 Time: 12:03:41
+ * 
  * @author Michael Adams (refactored for v2.0, 06/2008; 12/2008)
  */
-public class InterfaceA_EngineBasedServer extends HttpServlet {
-    private EngineGateway _engine;
-    private static final boolean _debug = false;
-    private static final Logger logger = Logger.getLogger(InterfaceA_EngineBasedServer.class);
+public class InterfaceA_EngineBasedServer extends HttpServlet
+{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1123245432111L;
+	private EngineGateway _engine;
+	private static final boolean _debug = false;
+	private static final Logger logger = Logger.getLogger(InterfaceA_EngineBasedServer.class);
 
+	public void init() throws ServletException
+	{
 
-    public void init() throws ServletException {     
+		ServletContext context = getServletContext();
 
-        ServletContext context = getServletContext();
+		// read persistence flag from web.xml & get engine instance
+		try
+		{
+			String persistOn = context.getInitParameter("EnablePersistence");
+			boolean enablePersist = "true".equalsIgnoreCase(persistOn);
 
-        // read persistence flag from web.xml & get engine instance
-        try {
-            String persistOn = context.getInitParameter("EnablePersistence") ;
-            boolean enablePersist = "true".equalsIgnoreCase(persistOn);
+			_engine = (EngineGateway) context.getAttribute("engine");
+			if (_engine == null)
+			{
+				_engine = new EngineGatewayImpl(enablePersist);
+				context.setAttribute("engine", _engine);
+			}
+		} catch (YPersistenceException e)
+		{
+			logger.fatal("Failure to initialise runtime (persistence failure)", e);
+			throw new UnavailableException("Persistence failure");
+		}
+	}
 
-            _engine = (EngineGateway) context.getAttribute("engine");
-            if (_engine == null) {
-                _engine = new EngineGatewayImpl(enablePersist);
-                context.setAttribute("engine", _engine);
-            }
-        } catch (YPersistenceException e) {
-            logger.fatal("Failure to initialise runtime (persistence failure)", e);
-            throw new UnavailableException("Persistence failure");
-        }
-    }
+	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException
+	{
+		doPost(request, response); // all gets redirected as posts
+	}
 
+	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException
+	{
+		OutputStreamWriter outputWriter = ServletUtils.prepareResponse(response);
+		StringBuilder output = new StringBuilder();
+		output.append("<response>");
+		output.append(processPostQuery(request));
+		output.append("</response>");
+		if (_engine.enginePersistenceFailure())
+		{
+			logger.fatal("************************************************************");
+			logger.fatal("A failure has occured whilst persisting workflow state to the");
+			logger.fatal("database. Check the satus of the database connection defined");
+			logger.fatal("for the YAWL service, and restart the YAWL web application.");
+			logger.fatal("Further information may be found within the Tomcat log files.");
+			logger.fatal("************************************************************");
+			response.sendError(500, "Database persistence failure detected");
+		}
+		ServletUtils.finalizeResponse(outputWriter, output);
+	}
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        doPost(request, response);                       // all gets redirected as posts
-    }
+	private String processPostQuery(HttpServletRequest request)
+	{
+		StringBuilder msg = new StringBuilder();
+		String sessionHandle = request.getParameter("sessionHandle");
+		String action = request.getParameter("action");
+		String userID = request.getParameter("userID");
+		String password = request.getParameter("password");
 
+		try
+		{
+			if (_debug)
+			{
+				debug(request, "Post");
+			}
 
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        OutputStreamWriter outputWriter = ServletUtils.prepareResponse(response);
-        StringBuilder output = new StringBuilder();
-        output.append("<response>");
-        output.append(processPostQuery(request));
-        output.append("</response>");
-        if (_engine.enginePersistenceFailure())
-        {
-            logger.fatal("************************************************************");
-            logger.fatal("A failure has occured whilst persisting workflow state to the");
-            logger.fatal("database. Check the satus of the database connection defined");
-            logger.fatal("for the YAWL service, and restart the YAWL web application.");
-            logger.fatal("Further information may be found within the Tomcat log files.");
-            logger.fatal("************************************************************");
-            response.sendError(500, "Database persistence failure detected");
-        }
-        ServletUtils.finalizeResponse(outputWriter, output);
-    }
+			if (action != null)
+			{
+				if ("connect".equals(action))
+				{
+					int interval = request.getSession().getMaxInactiveInterval();
+					msg.append(_engine.connect(userID, password, interval));
+				} else if ("checkConnection".equals(action))
+				{
+					msg.append(_engine.checkConnectionForAdmin(sessionHandle));
+				} else if ("upload".equals(action))
+				{
+					String specXML = request.getParameter("specXML");
+					msg.append(_engine.loadSpecification(specXML, sessionHandle));
+				} else if ("getAccounts".equals(action))
+				{
+					msg.append(_engine.getAccounts(sessionHandle));
+				} else if ("getAccount".equals(action))
+				{
+					msg.append(_engine.getClientAccount(userID, sessionHandle));
+				} else if ("getList".equals(action))
+				{
+					msg.append(_engine.getSpecificationList(sessionHandle));
+				} else if ("getYAWLServices".equals(action))
+				{
+					msg.append(_engine.getYAWLServices(sessionHandle));
+				} else if ("createAccount".equals(action))
+				{
+					String doco = request.getParameter("doco");
+					msg.append(_engine.createAccount(userID, password, doco, sessionHandle));
+				} else if ("updateAccount".equals(action))
+				{
+					String doco = request.getParameter("doco");
+					msg.append(_engine.updateAccount(userID, password, doco, sessionHandle));
+				} else if ("deleteAccount".equals(action))
+				{
+					msg.append(_engine.deleteAccount(userID, sessionHandle));
+				} else if ("newPassword".equals(action))
+				{
+					msg.append(_engine.changePassword(password, sessionHandle));
+				} else if ("getPassword".equals(action))
+				{
+					msg.append(_engine.getClientPassword(userID, sessionHandle));
+				} else if ("getBuildProperties".equals(action))
+				{
+					msg.append(_engine.getBuildProperties(sessionHandle));
+				} else if ("newYAWLService".equals(action))
+				{
+					String serviceStr = request.getParameter("service");
+					msg.append(_engine.addYAWLService(serviceStr, sessionHandle));
+				} else if ("removeYAWLService".equals(action))
+				{
+					String serviceURI = request.getParameter("serviceURI");
+					msg.append(_engine.removeYAWLService(serviceURI, sessionHandle));
+				} else if ("getExternalDBGateways".equals(action))
+				{
+					msg.append(_engine.getExternalDBGateways(sessionHandle));
+				} else if ("unload".equals(action))
+				{
+					String specIdentifier = request.getParameter("specidentifier");
+					String version = request.getParameter("specversion");
+					String uri = request.getParameter("specuri");
+					YSpecificationID specID = new YSpecificationID(specIdentifier, version, uri);
+					msg.append(_engine.unloadSpecification(specID, sessionHandle));
+				} else if ("setHibernateStatisticsEnabled".equals(action))
+				{
+					String enabled = request.getParameter("enabled");
+					if (enabled != null)
+					{
+						_engine.setHibernateStatisticsEnabled(enabled.equalsIgnoreCase("true"), sessionHandle);
+						msg.append("<success/>");
+					} else
+					{
+						msg.append("<failure>Invalid parameter value 'enabled'</failure>");
+					}
+				} else if ("isHibernateStatisticsEnabled".equals(action))
+				{
+					msg.append(_engine.isHibernateStatisticsEnabled(sessionHandle));
+				} else if ("getHibernateStatistics".equals(action))
+				{
+					msg.append(_engine.getHibernateStatistics(sessionHandle));
+				}
+			}
+		} catch (Exception e)
+		{
+			logger.error("Exception in Interface B with action: " + action, e);
+		}
+		if (msg.length() == 0)
+		{
+			msg.append("<failure><reason>Invalid action or exception was thrown." + "</reason></failure>");
+		}
+		if (_debug)
+		{
+			logger.debug("return = " + msg);
+		}
+		return msg.toString();
+	}
 
-
-    private String processPostQuery(HttpServletRequest request) {
-        StringBuilder msg = new StringBuilder();
-        String sessionHandle = request.getParameter("sessionHandle");
-        String action = request.getParameter("action");
-        String userID = request.getParameter("userID");
-        String password = request.getParameter("password");
-
-        try {
-            if (_debug) {
-                debug(request, "Post");
-            }
-
-            if (action != null) {
-                if ("connect".equals(action)) {
-                    int interval = request.getSession().getMaxInactiveInterval();
-                    msg.append(_engine.connect(userID, password, interval));
-                }
-                else if ("checkConnection".equals(action)) {
-                    msg.append(_engine.checkConnectionForAdmin(sessionHandle));
-                }
-                else if ("upload".equals(action)) {
-                    String specXML = request.getParameter("specXML");
-                    msg.append(_engine.loadSpecification(specXML, sessionHandle));
-                }
-                else if ("getAccounts".equals(action)) {
-                    msg.append(_engine.getAccounts(sessionHandle));
-                }
-                else if ("getAccount".equals(action)) {
-                    msg.append(_engine.getClientAccount(userID, sessionHandle));
-                }
-                else if ("getList".equals(action)) {
-                    msg.append(_engine.getSpecificationList(sessionHandle));
-                }
-                else if ("getYAWLServices".equals(action)) {
-                    msg.append(_engine.getYAWLServices(sessionHandle));
-                }
-                else if ("createAccount".equals(action)) {
-                    String doco = request.getParameter("doco");
-                    msg.append(_engine.createAccount(userID, password, doco, sessionHandle));
-                }
-                else if ("updateAccount".equals(action)) {
-                    String doco = request.getParameter("doco");
-                    msg.append(_engine.updateAccount(userID, password, doco, sessionHandle));
-                }
-                else if ("deleteAccount".equals(action)) {
-                    msg.append(_engine.deleteAccount(userID, sessionHandle));
-                }
-                else if ("newPassword".equals(action)) {
-                    msg.append(_engine.changePassword(password, sessionHandle));
-                }
-                else if ("getPassword".equals(action)) {
-                    msg.append(_engine.getClientPassword(userID, sessionHandle));
-                }
-                else if ("getBuildProperties".equals(action)) {
-                    msg.append(_engine.getBuildProperties(sessionHandle));
-                }
-                else if ("newYAWLService".equals(action)) {
-                    String serviceStr = request.getParameter("service");
-                    msg.append(_engine.addYAWLService(serviceStr, sessionHandle));
-                }
-                else if ("removeYAWLService".equals(action)) {
-                    String serviceURI = request.getParameter("serviceURI");
-                    msg.append(_engine.removeYAWLService(serviceURI, sessionHandle));
-                }
-                else if ("getExternalDBGateways".equals(action)) {
-                    msg.append(_engine.getExternalDBGateways(sessionHandle));
-                }
-                else if ("unload".equals(action)) {
-                    String specIdentifier = request.getParameter("specidentifier");
-                    String version = request.getParameter("specversion");
-                    String uri = request.getParameter("specuri");
-                    YSpecificationID specID =
-                            new YSpecificationID(specIdentifier, version, uri);
-                    msg.append(_engine.unloadSpecification(specID, sessionHandle));
-                }
-                else if ("setHibernateStatisticsEnabled".equals(action)) {
-                    String enabled = request.getParameter("enabled");
-                    if (enabled != null) {
-                        _engine.setHibernateStatisticsEnabled(enabled.equalsIgnoreCase("true"),
-                                sessionHandle);
-                        msg.append("<success/>");
-                    }
-                    else {
-                        msg.append("<failure>Invalid parameter value 'enabled'</failure>");
-                    }
-                }
-                else if ("isHibernateStatisticsEnabled".equals(action)) {
-                    msg.append(_engine.isHibernateStatisticsEnabled(sessionHandle));
-                }
-                else if ("getHibernateStatistics".equals(action)) {
-                    msg.append(_engine.getHibernateStatistics(sessionHandle));
-                }
-            }
-        }
-        catch (Exception e) {
-            logger.error("Exception in Interface B with action: " + action, e);
-        }
-        if (msg.length() == 0) {
-            msg.append("<failure><reason>Invalid action or exception was thrown." +
-                       "</reason></failure>");
-        }
-        if (_debug) {
-            logger.debug("return = " + msg);
-        }
-        return msg.toString();
-    }
-
-
-    private void debug(HttpServletRequest request, String service) {
-        logger.debug("\nInterfaceA_EngineBasedServer::do" + service + "() " +
-                "request.getRequestURL = " + request.getRequestURL());
-        logger.debug("\nInterfaceA_EngineBasedServer::do" + service +
-                "() request.parameters = ");
-        Enumeration paramNms = request.getParameterNames();
-        while (paramNms.hasMoreElements()) {
-            String name = (String) paramNms.nextElement();
-            logger.debug("\trequest.getParameter(" + name + ") = " +
-                    request.getParameter(name));
-        }
-    }
+	private void debug(HttpServletRequest request, String service)
+	{
+		logger.debug("\nInterfaceA_EngineBasedServer::do" + service + "() " + "request.getRequestURL = "
+				+ request.getRequestURL());
+		logger.debug("\nInterfaceA_EngineBasedServer::do" + service + "() request.parameters = ");
+		Enumeration paramNms = request.getParameterNames();
+		while (paramNms.hasMoreElements())
+		{
+			String name = (String) paramNms.nextElement();
+			logger.debug("\trequest.getParameter(" + name + ") = " + request.getParameter(name));
+		}
+	}
 }
-
-

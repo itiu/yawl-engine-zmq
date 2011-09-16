@@ -53,7 +53,7 @@ public class InterfaceA_EngineBasedServer extends HttpServlet
 	public void init() throws ServletException
 	{
 		logger.debug("initialise InterfaceA_EngineBasedServer...");
-		
+
 		ServletContext context = getServletContext();
 
 		// read persistence flag from web.xml & get engine instance
@@ -73,8 +73,8 @@ public class InterfaceA_EngineBasedServer extends HttpServlet
 			logger.fatal("Failure to initialise runtime (persistence failure)", e);
 			throw new UnavailableException("Persistence failure");
 		}
-		
-		logger.debug("initialise InterfaceA_EngineBasedServer is Ok");		
+
+		logger.debug("initialise InterfaceA_EngineBasedServer is Ok");
 	}
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException

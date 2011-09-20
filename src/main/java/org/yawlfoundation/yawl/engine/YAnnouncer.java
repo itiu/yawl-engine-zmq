@@ -29,6 +29,7 @@ import org.yawlfoundation.yawl.engine.announcement.YAnnouncement;
 import org.yawlfoundation.yawl.engine.announcement.YEngineEvent;
 import org.yawlfoundation.yawl.engine.interfce.interfaceB.InterfaceB_EngineBasedClient;
 import org.yawlfoundation.yawl.engine.interfce.interfaceX.InterfaceX_EngineSideClient;
+import org.yawlfoundation.yawl.engine.interfce.interfaceB.InterfaceB_EngineBased_ZMQ_Client;
 import org.yawlfoundation.yawl.exceptions.YAWLException;
 import org.yawlfoundation.yawl.exceptions.YStateException;
 
@@ -68,6 +69,13 @@ public class YAnnouncer {
         }
         catch (YAWLException ye) {
             _logger.warn("Failed to register default observer gateway. The Engine " +
+                    "may be unable to send notifications to services!", ye);
+        }
+        try {
+            _controller.addGateway(new InterfaceB_EngineBased_ZMQ_Client());
+        }
+        catch (YAWLException ye) {
+            _logger.warn("Failed to register InterfaceB_EngineBased_ZMQ_Client observer gateway. The Engine " +
                     "may be unable to send notifications to services!", ye);
         }
     }

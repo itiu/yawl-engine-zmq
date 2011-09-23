@@ -1,9 +1,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>yawl</groupId>
-  <artifactId>yawl</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-<packaging>war</packaging>
+  <artifactId>yawl-engine</artifactId>
+  <version>0.0.2-SNAPSHOT</version>
+<packaging>jar</packaging>
 
 <dependencies>
 
@@ -219,8 +219,21 @@
                 </configuration>
             </plugin>
         </plugins>
-
     </build>
 
+    <distributionManagement>
+        <repository>
+            <uniqueVersion>false</uniqueVersion>
+            <id>172.17.1.236</id>
+            <name>172.17.1.236-releases</name>
+            <url>dav:http://172.17.1.236:8081/artifactory/libs-releases-local</url>
+        </repository>
+        <snapshotRepository>
+            <uniqueVersion>false</uniqueVersion>
+            <id>172.17.1.236</id>
+            <name>172.17.1.236-snapshots</name>
+            <url>dav:http://172.17.1.236:8081/artifactory/libs-snapshots-local</url>
+        </snapshotRepository>
+    </distributionManagement>
 
 </project>

@@ -289,8 +289,7 @@ public class InterfaceB_EngineBased_ZMQ_Client implements ObserverGateway
 	{
 		List<YParameter> paramResults = new ArrayList<YParameter>();
 		Map<String, String> paramMap = new Hashtable<String, String>();
-		paramMap.put("action", "ParameterInfoRequest");
-		String parametersAsString = executeGet(yawlService.getURI(), paramMap);
+		String parametersAsString = executeGet("ParameterInfoRequest", yawlService.getURI(), paramMap);
 
 		// above should have returned a xml doc containing params descriptions
 		// of required params to operate custom service.
@@ -399,7 +398,8 @@ public class InterfaceB_EngineBased_ZMQ_Client implements ObserverGateway
 					break;
 				}
 				}
-				executePost(_yawlService.getURI(), paramsMap, _workItem);
+				String action = paramsMap.get("action");
+				executePost(action, _yawlService.getURI(), paramsMap, _workItem);
 			} catch (ConnectException ce)
 			{
 				if (_command == ITEM_ADD)
@@ -455,13 +455,27 @@ public class InterfaceB_EngineBased_ZMQ_Client implements ObserverGateway
 
 	/////////////////////////////////////////////////////////////////////////
 
-	private String executeGet(String urlStr, Map<String, String> paramsMap) throws ConnectException, IOException
+	private String executeGet(String action, String urlStr, Map<String, String> paramsMap) throws ConnectException,
+			IOException
 	{
-		PacahonClient pclient = getPacahonClient(urlStr);
+		try
+		{
+			PacahonClient pclient = getPacahonClient(urlStr);
 
-		pclient = pclient;
+			JSONObject arg = new JSONObject();
+
+			if (action.equals("ParameterInfoRequest"))
+			{
+				JSONArray result = pclient.send_command(uri_ticket.get(urlStr), "yawl:ParameterInfoRequest", arg,
+						"InterfaceB_EngineBased_ZMQ_Client: executePost");
+			}
+		} catch (Exception ex)
+		{
+			throw new IOException(ex);
+		}
 
 		return null;
+
 	}
 
 	private Map<String, String> prepareParamMap(String action, String handle)
@@ -473,16 +487,16 @@ public class InterfaceB_EngineBased_ZMQ_Client implements ObserverGateway
 		return paramMap;
 	}
 
-	private String executePost(String urlStr, Map<String, String> paramsMap, YWorkItem _workItem) throws IOException
+	private String executePost(String action, String urlStr, Map<String, String> paramsMap, YWorkItem _workItem)
+			throws IOException
 	{
 		try
 		{
-
 			PacahonClient pclient = getPacahonClient(urlStr);
 
 			JSONObject arg = new JSONObject();
 
-			if (_workItem != null)
+			if (action.equals("announceItemEnabled") && _workItem != null)
 			{
 				arg.put("@", "zdb:" + _workItem.getTaskID() + "-" + _workItem.getCaseID());
 				arg.put("a", "yawl:workItem");

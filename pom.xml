@@ -16,7 +16,7 @@
     <dependency>
           <groupId>org.gost19.pacahon.client</groupId>
           <artifactId>pacahon-client</artifactId>
-          <version>0.4-SNAPSHOT</version>
+          <version>0.5-SNAPSHOT</version>
     </dependency>
 
     <dependency>

@@ -35,6 +35,7 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -69,13 +70,16 @@ public class InterfaceB_EngineBased_ZMQ_Client implements ObserverGateway
 	private static final ExecutorService _executor = Executors.newFixedThreadPool(Runtime.getRuntime()
 			.availableProcessors());
 
-	private HashMap<String, PacahonClient> uri_pacahonClient;
-	private HashMap<String, String> uri_ticket;
+	private static HashMap<String, PacahonClient> uri_pacahonClient;
+	private static HashMap<String, String> uri_ticket;
 
 	public InterfaceB_EngineBased_ZMQ_Client()
 	{
-		uri_pacahonClient = new HashMap<String, PacahonClient>();
-		uri_ticket = new HashMap<String, String>();
+		if (uri_pacahonClient == null)
+			uri_pacahonClient = new HashMap<String, PacahonClient>();
+
+		if (uri_ticket == null)
+			uri_ticket = new HashMap<String, String>();
 	}
 
 	/**
@@ -289,22 +293,32 @@ public class InterfaceB_EngineBased_ZMQ_Client implements ObserverGateway
 	{
 		List<YParameter> paramResults = new ArrayList<YParameter>();
 		Map<String, String> paramMap = new Hashtable<String, String>();
-		String parametersAsString = executeGet("ParameterInfoRequest", yawlService.getURI(), paramMap);
+		JSONArray vars = executeGet("ParameterInfoRequest", yawlService.getURI(), paramMap);
 
-		// above should have returned a xml doc containing params descriptions
-		// of required params to operate custom service.
-		Element eParams = JDOMUtil.stringToElement(parametersAsString);
-		if (eParams != null)
+		Iterator<JSONObject> subj_it = vars.iterator();
+		while (subj_it.hasNext())
 		{
-			List params = eParams.getChildren();
-			for (Object o : params)
+			JSONObject ss = subj_it.next();
+
+			String name = (String) ss.get("@");
+			String type = (String) ss.get("rdf:type");
+			String datatype = (String) ss.get("process:parameterType");
+			YParameter param = null;
+
+			if (type.equals("process:Input"))
+				param = new YParameter(null, "inputParam");
+			else if ((type.equals("process:Output")))
+				param = new YParameter(null, "outputParam");
+
+			if (param != null)
 			{
-				Element paramElem = (Element) o;
-				YParameter param = new YParameter(null, paramElem.getName());
-				YDecompositionParser.parseParameter(paramElem, param, null, false);
+				//			YDecompositionParser.parseParameter(paramElem, param, null, false);
+				param.setDataTypeAndName(datatype.replaceAll("xsd:", ""), name, null);
 				paramResults.add(param);
 			}
+
 		}
+
 		return paramResults.toArray(new YParameter[paramResults.size()]);
 	}
 
@@ -454,10 +468,11 @@ public class InterfaceB_EngineBased_ZMQ_Client implements ObserverGateway
 	}
 
 	/////////////////////////////////////////////////////////////////////////
-
-	private String executeGet(String action, String urlStr, Map<String, String> paramsMap) throws ConnectException,
+	private JSONArray executeGet(String action, String urlStr, Map<String, String> paramsMap) throws ConnectException,
 			IOException
 	{
+		JSONArray result = null;
+
 		try
 		{
 			PacahonClient pclient = getPacahonClient(urlStr);
@@ -466,7 +481,7 @@ public class InterfaceB_EngineBased_ZMQ_Client implements ObserverGateway
 
 			if (action.equals("ParameterInfoRequest"))
 			{
-				JSONArray result = pclient.send_command(uri_ticket.get(urlStr), "yawl:ParameterInfoRequest", arg,
+				result = pclient.send_command(uri_ticket.get(urlStr), "yawl:ParameterInfoRequest", arg,
 						"InterfaceB_EngineBased_ZMQ_Client: executePost");
 			}
 		} catch (Exception ex)
@@ -474,7 +489,7 @@ public class InterfaceB_EngineBased_ZMQ_Client implements ObserverGateway
 			throw new IOException(ex);
 		}
 
-		return null;
+		return result;
 
 	}
 

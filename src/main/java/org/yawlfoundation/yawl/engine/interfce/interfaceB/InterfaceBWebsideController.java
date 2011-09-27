@@ -282,6 +282,12 @@ public abstract class InterfaceBWebsideController {
         }
         else throw new YAWLException(msg);
 
+		if (resultItem != null)
+		{
+			System.out.println();
+			System.out.println("checkOut:" + resultItem.toXML());
+			System.out.println();
+		}        
         return resultItem;
     }
 

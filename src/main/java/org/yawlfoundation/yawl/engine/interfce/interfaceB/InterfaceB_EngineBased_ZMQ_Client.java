@@ -44,9 +44,7 @@ import java.util.concurrent.Executors;
 
 import org.apache.log4j.Logger;
 import org.gost19.pacahon.client.PacahonClient;
-import org.gost19.pacahon.client.Predicates;
 import org.jdom.Document;
-import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -59,12 +57,12 @@ import org.yawlfoundation.yawl.engine.YWorkItem;
 import org.yawlfoundation.yawl.engine.YWorkItemStatus;
 import org.yawlfoundation.yawl.engine.announcement.YAnnouncement;
 import org.yawlfoundation.yawl.engine.announcement.YEngineEvent;
-import org.yawlfoundation.yawl.unmarshal.YDecompositionParser;
 import org.yawlfoundation.yawl.util.HttpURLValidator;
 import org.yawlfoundation.yawl.util.JDOMUtil;
 
 public class InterfaceB_EngineBased_ZMQ_Client implements ObserverGateway
 {
+	protected static final String XSD_NAMESPACE = "http://www.w3.org/2001/XMLSchema";
 
 	protected static final Logger _logger = Logger.getLogger(InterfaceB_EngineBased_ZMQ_Client.class);
 	private static final ExecutorService _executor = Executors.newFixedThreadPool(Runtime.getRuntime()
@@ -313,7 +311,7 @@ public class InterfaceB_EngineBased_ZMQ_Client implements ObserverGateway
 			if (param != null)
 			{
 				//			YDecompositionParser.parseParameter(paramElem, param, null, false);
-				param.setDataTypeAndName(datatype.replaceAll("xsd:", ""), name, null);
+				param.setDataTypeAndName(datatype.replaceAll("xsd:", ""), name, XSD_NAMESPACE);
 				paramResults.add(param);
 			}
 
@@ -387,6 +385,14 @@ public class InterfaceB_EngineBased_ZMQ_Client implements ObserverGateway
 		public void run()
 		{
 			Map<String, String> paramsMap = prepareParamMap(_command.label(), null);
+
+			if (_workItem != null)
+			{
+				System.out.println();
+				System.out.println("z:" + paramsMap);
+				System.out.println("z:" + _workItem.toXML());
+				System.out.println();
+			}
 			//			if (_workItem != null)
 			//				paramsMap.put("workItem", _workItem.toXML());
 			if (_caseID != null)

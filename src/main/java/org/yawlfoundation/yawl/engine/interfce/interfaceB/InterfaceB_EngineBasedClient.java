@@ -311,8 +311,18 @@ public class InterfaceB_EngineBasedClient extends Interface_Client implements Ob
          */
         public void run() {
             Map<String, String> paramsMap = prepareParamMap(_command.label(), null);
-            if (_workItem != null) paramsMap.put("workItem", _workItem.toXML());
+            
+			if (_workItem != null)
+			{
+				System.out.println();
+				System.out.println("h:" + paramsMap);
+				System.out.println("h:" + _workItem.toXML());
+				System.out.println();
+			}
+
+			if (_workItem != null) paramsMap.put("workItem", _workItem.toXML());
             if (_caseID != null) paramsMap.put("caseID", _caseID.toString());
+                        
             try {
                 switch (_command) {
                     case ITEM_STATUS: {

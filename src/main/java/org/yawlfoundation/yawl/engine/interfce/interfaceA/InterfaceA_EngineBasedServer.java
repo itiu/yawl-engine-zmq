@@ -52,6 +52,9 @@ public class InterfaceA_EngineBasedServer extends HttpServlet
 
 	public void init() throws ServletException
 	{
+		 ZMQ_listener zmq_listener = new ZMQ_listener ();
+		 zmq_listener.start ();
+		
 		logger.debug("initialise InterfaceA_EngineBasedServer...");
 
 		ServletContext context = getServletContext();

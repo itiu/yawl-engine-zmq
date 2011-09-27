@@ -3,7 +3,7 @@
   <groupId>yawl</groupId>
   <artifactId>yawl-engine</artifactId>
   <version>0.0.2-SNAPSHOT</version>
-<packaging>jar</packaging>
+  <packaging>war</packaging>
 
 <dependencies>
 

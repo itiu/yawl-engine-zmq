@@ -1,0 +1,239 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>yawl</groupId>
+  <artifactId>yawl-engine</artifactId>
+  <version>0.0.2-SNAPSHOT</version>
+  <packaging>war</packaging>
+
+<dependencies>
+
+    <dependency>
+          <groupId>org.zeromq</groupId>
+          <artifactId>jzmq</artifactId>
+          <version>2.1.0-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+          <groupId>org.gost19.pacahon.client</groupId>
+          <artifactId>pacahon-client</artifactId>
+          <version>0.5-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+	<groupId>org.jdom</groupId>
+	<artifactId>jdom</artifactId>
+	<version>1.1</version>
+	<scope>provided</scope>
+    </dependency>
+
+    <dependency>
+	<groupId>commons-codec</groupId>
+	<artifactId>commons-codec</artifactId>
+	<version>1.4</version>
+	<scope>provided</scope>
+    </dependency>
+
+    <dependency>
+	<groupId>org.bouncycastle</groupId>
+	<artifactId>bcmail-jdk15</artifactId>
+	<version>1.44</version>
+	<scope>provided</scope>
+   </dependency>                                                                        
+
+
+    <dependency>
+	<groupId>org.bouncycastle</groupId>
+	<artifactId>bcprov-jdk15</artifactId>
+	<version>1.44</version>
+	<scope>provided</scope>
+    </dependency>
+
+    <dependency>
+	<groupId>log4j</groupId>
+	<artifactId>log4j</artifactId>
+	<version>1.2.16</version>
+	<scope>provided</scope>
+    </dependency>
+
+    <dependency>
+        <groupId>org.twitter4j</groupId>
+        <artifactId>twitter4j-core</artifactId>
+        <version>2.1.8</version>
+        <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+        <groupId>net.sourceforge.saxon</groupId>
+        <artifactId>saxonhe</artifactId>
+        <version>9.2.1.5</version>
+        <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+	<groupId>org.hibernate</groupId>
+	<artifactId>hibernate</artifactId>
+	<version>3.2.1.ga</version>
+	<type>jar</type>
+	<scope>provided</scope>
+    </dependency>
+
+    <dependency>
+        <groupId>commons-lang</groupId>
+        <artifactId>commons-lang</artifactId>
+        <version>2.3</version>
+	<scope>provided</scope>
+    </dependency>
+
+    <dependency>
+        <groupId>javax.servlet</groupId>
+        <artifactId>servlet-api</artifactId>
+        <version>2.4</version>
+	<scope>provided</scope>
+    </dependency>
+
+    <dependency>
+	<groupId>javax.mail</groupId>
+	<artifactId>mail</artifactId>
+	<version>1.4</version>
+	<scope>provided</scope>
+    </dependency>
+
+    <dependency>
+	<groupId>org.codemonkey.simplejavamail</groupId>
+        <artifactId>simple-java-mail</artifactId>
+        <version>2.0</version>
+	<scope>provided</scope>
+    </dependency>
+
+    <dependency>
+        <groupId>javax.faces</groupId>
+        <artifactId>jsf-impl</artifactId>
+        <version>1.2</version>
+	<scope>provided</scope>
+    </dependency>
+
+    <dependency>
+        <groupId>javax.faces</groupId>
+        <artifactId>jsf-api</artifactId>
+        <version>1.2</version>
+	<scope>provided</scope>
+    </dependency>
+
+   <dependency> 
+        <groupId>com.sun.rave</groupId>
+        <artifactId>webui</artifactId>
+        <version>1.0</version>
+	<scope>provided</scope>
+    </dependency>
+
+   <dependency> 
+        <groupId>com.sun.rave.web.ui</groupId>
+        <artifactId>appbase</artifactId>
+        <version>1.0</version>
+	<scope>provided</scope>
+    </dependency>
+
+    <dependency>
+        <groupId>commons-beanutils</groupId>
+        <artifactId>commons-beanutils</artifactId>
+    	<version>1.7.0</version>
+	<scope>provided</scope>
+    </dependency>
+
+    <dependency>
+        <groupId>xerces</groupId>
+        <artifactId>xercesImpl</artifactId>
+        <version>2.2.1</version>
+	<scope>provided</scope>
+    </dependency>
+
+    <dependency>
+        <groupId>org.eclipse.emf</groupId>
+        <artifactId>ecore</artifactId>
+        <version>2.1.0</version>
+	<scope>provided</scope>
+    </dependency>
+
+    <dependency>
+	<groupId>org.apache.ws</groupId>
+	<artifactId>wsif</artifactId>
+	<version>2.0.1_IB3</version>
+	<scope>provided</scope>
+    </dependency>
+
+    <dependency>
+	<groupId>wsdl4j</groupId>
+	<artifactId>wsdl4j</artifactId>
+	<version>1.6.2</version>
+	<scope>provided</scope>
+    </dependency>
+
+    <dependency>
+	<groupId>org.eclipse.emf</groupId>
+	<artifactId>org.eclipse.emf.common</artifactId>
+	<version>2.6.0.v20100614-1136</version>
+	<scope>provided</scope>
+    </dependency>
+
+     <dependency>
+        <groupId>org.eclipse.xsd</groupId>
+        <artifactId>xsd</artifactId>
+        <version>2.2.3</version>
+	<scope>provided</scope>
+    </dependency>
+
+    <dependency>
+	<groupId>net.sf.saxon</groupId>
+        <artifactId>saxon-jdom</artifactId>
+        <version>8.7</version>
+	<scope>provided</scope>
+    </dependency>
+
+</dependencies>
+
+    <build>
+
+        <extensions>
+            <extension>
+                <groupId>org.apache.maven.wagon</groupId>
+                <artifactId>wagon-webdav</artifactId>
+                <version>1.0-beta-2</version>
+            </extension>
+        </extensions>
+
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.2</version>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.4.1</version>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <distributionManagement>
+        <repository>
+            <uniqueVersion>false</uniqueVersion>
+            <id>172.17.1.236</id>
+            <name>172.17.1.236-releases</name>
+            <url>dav:http://172.17.1.236:8081/artifactory/libs-releases-local</url>
+        </repository>
+        <snapshotRepository>
+            <uniqueVersion>false</uniqueVersion>
+            <id>172.17.1.236</id>
+            <name>172.17.1.236-snapshots</name>
+            <url>dav:http://172.17.1.236:8081/artifactory/libs-snapshots-local</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+</project>

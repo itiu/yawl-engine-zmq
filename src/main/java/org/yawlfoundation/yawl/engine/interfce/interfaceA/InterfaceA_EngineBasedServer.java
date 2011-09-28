@@ -51,10 +51,7 @@ public class InterfaceA_EngineBasedServer extends HttpServlet
 	private static final Logger logger = Logger.getLogger(InterfaceA_EngineBasedServer.class);
 
 	public void init() throws ServletException
-	{
-		 ZMQ_listener zmq_listener = new ZMQ_listener ();
-		 zmq_listener.start ();
-		
+	{		
 		logger.debug("initialise InterfaceA_EngineBasedServer...");
 
 		ServletContext context = getServletContext();
@@ -77,7 +74,10 @@ public class InterfaceA_EngineBasedServer extends HttpServlet
 			throw new UnavailableException("Persistence failure");
 		}
 
-		logger.debug("initialise InterfaceA_EngineBasedServer is Ok");
+		 ZMQ_listener zmq_listener = new ZMQ_listener (_engine);
+		 zmq_listener.start ();
+
+		 logger.debug("initialise InterfaceA_EngineBasedServer is Ok");
 	}
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException

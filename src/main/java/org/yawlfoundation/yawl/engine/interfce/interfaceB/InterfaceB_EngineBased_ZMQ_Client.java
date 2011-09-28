@@ -519,7 +519,7 @@ public class InterfaceB_EngineBased_ZMQ_Client implements ObserverGateway
 
 			if (action.equals("announceItemEnabled") && _workItem != null)
 			{
-				arg.put("@", "zdb:" + _workItem.getTaskID() + "-" + _workItem.getCaseID());
+				arg.put("@", _workItem.getCaseID() + ":" + _workItem.getTaskID());
 				arg.put("a", "yawl:workItem");
 
 				arg.put("yawl:taskId", _workItem.getTaskID());

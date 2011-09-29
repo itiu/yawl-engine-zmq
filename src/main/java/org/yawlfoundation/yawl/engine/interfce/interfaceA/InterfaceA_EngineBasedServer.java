@@ -19,6 +19,7 @@
 package org.yawlfoundation.yawl.engine.interfce.interfaceA;
 
 import org.apache.log4j.Logger;
+import org.yawlfoundation.yawl.engine.YEngine;
 import org.yawlfoundation.yawl.engine.YSpecificationID;
 import org.yawlfoundation.yawl.engine.interfce.EngineGateway;
 import org.yawlfoundation.yawl.engine.interfce.EngineGatewayImpl;
@@ -51,7 +52,7 @@ public class InterfaceA_EngineBasedServer extends HttpServlet
 	private static final Logger logger = Logger.getLogger(InterfaceA_EngineBasedServer.class);
 
 	public void init() throws ServletException
-	{		
+	{
 		logger.debug("initialise InterfaceA_EngineBasedServer...");
 
 		ServletContext context = getServletContext();
@@ -68,16 +69,17 @@ public class InterfaceA_EngineBasedServer extends HttpServlet
 				_engine = new EngineGatewayImpl(enablePersist);
 				context.setAttribute("engine", _engine);
 			}
+
+			ZMQ_listener zmq_listener = new ZMQ_listener(YEngine.getInstance(enablePersist));
+			zmq_listener.start();
+
 		} catch (YPersistenceException e)
 		{
 			logger.fatal("Failure to initialise runtime (persistence failure)", e);
 			throw new UnavailableException("Persistence failure");
 		}
 
-		 ZMQ_listener zmq_listener = new ZMQ_listener (_engine);
-		 zmq_listener.start ();
-
-		 logger.debug("initialise InterfaceA_EngineBasedServer is Ok");
+		logger.debug("initialise InterfaceA_EngineBasedServer is Ok");
 	}
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException

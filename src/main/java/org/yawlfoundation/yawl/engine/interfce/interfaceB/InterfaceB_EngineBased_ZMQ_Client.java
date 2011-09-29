@@ -57,6 +57,7 @@ import org.yawlfoundation.yawl.engine.YWorkItem;
 import org.yawlfoundation.yawl.engine.YWorkItemStatus;
 import org.yawlfoundation.yawl.engine.announcement.YAnnouncement;
 import org.yawlfoundation.yawl.engine.announcement.YEngineEvent;
+import org.yawlfoundation.yawl.engine.interfce.interfaceA.ZMQ_listener;
 import org.yawlfoundation.yawl.util.HttpURLValidator;
 import org.yawlfoundation.yawl.util.JDOMUtil;
 
@@ -77,7 +78,7 @@ public class InterfaceB_EngineBased_ZMQ_Client implements ObserverGateway
 			uri_pacahonClient = new HashMap<String, PacahonClient>();
 
 		if (uri_ticket == null)
-			uri_ticket = new HashMap<String, String>();
+			uri_ticket = new HashMap<String, String>();		
 	}
 
 	/**
@@ -515,40 +516,10 @@ public class InterfaceB_EngineBased_ZMQ_Client implements ObserverGateway
 		{
 			PacahonClient pclient = getPacahonClient(urlStr);
 
-			JSONObject arg = new JSONObject();
-
 			if (action.equals("announceItemEnabled") && _workItem != null)
 			{
-				arg.put("@", _workItem.getCaseID() + ":" + _workItem.getTaskID());
-				arg.put("a", "yawl:workItem");
-
-				arg.put("yawl:taskId", _workItem.getTaskID());
-				arg.put("yawl:caseId", _workItem.getCaseID());
-
-				if (_workItem.getTask().getName() != null)
-					arg.put("yawl:taskName", _workItem.getTask().getName());
-
-				if (_workItem.get_specIdentifier() != null)
-					arg.put("yawl:specIdentifier", _workItem.get_specIdentifier());
-
-				if (_workItem.get_specVersion() != null)
-					arg.put("yawl:specVersion", _workItem.get_specVersion());
-
-				if (_workItem.get_specUri() != null)
-					arg.put("yawl:specUri", _workItem.get_specUri());
-
-				if (_workItem.get_status() != null)
-					arg.put("yawl:status", _workItem.get_status());
-
-				if (_workItem.get_enablementTime() != null)
-				{
-					arg.put("yawl:enablementTime", _workItem.get_enablementTime() + "");
-					arg.put("yawl:enablementTimeMs", _workItem.get_enablementTime().getTime() + "");
-				}
-
-				JSONArray result = pclient.send_command(uri_ticket.get(urlStr), "yawl:announceItemEnabled", arg,
+				JSONArray result = pclient.send_command(uri_ticket.get(urlStr), "yawl:announceItemEnabled", _workItem.toJsonObject(),
 						"InterfaceB_EngineBased_ZMQ_Client: executePost");
-
 			}
 		} catch (Exception ex)
 		{

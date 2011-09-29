@@ -20,6 +20,7 @@ package org.yawlfoundation.yawl.engine.interfce;
 
 import org.yawlfoundation.yawl.engine.ObserverGateway;
 import org.yawlfoundation.yawl.engine.YSpecificationID;
+import org.yawlfoundation.yawl.engine.YWorkItem;
 import org.yawlfoundation.yawl.exceptions.YAWLException;
 
 import java.net.URI;

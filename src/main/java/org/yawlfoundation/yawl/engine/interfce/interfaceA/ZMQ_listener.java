@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.UUID;
 
 import org.gost19.pacahon.client.PacahonClient;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -153,8 +152,37 @@ public class ZMQ_listener extends Thread
 						out_msg = "{\n \"@\" : \"msg:M" + msg_uuid + "\", \n \"a\" : \"msg:Message\",\n"
 								+ "\"msg:in-reply-to\" : \"" + msg_id + "\",\n" + "\"msg:sender\" : \"" + from
 								+ "\",\n"
-								+ "\"msg:reciever\" : \"pacahon\",\n \"msg:status\" : \"ok\",\n \"msg:result\" : \n{\n"
-								+ res_ywi.toJsonObject() + "\n}\n}";
+								+ "\"msg:reciever\" : \"pacahon\",\n \"msg:status\" : \"ok\",\n \"msg:result\" : \n"
+								+ res_ywi.toJsonObject() + "\n}";
+
+					}
+
+				} else if (command.equals("checkin"))
+				{
+					String ticket = (String) args.get("auth:ticket");
+					String taskId = (String) args.get("yawl:taskId");
+					String caseId = (String) args.get("yawl:caseId");
+					JSONObject data = (JSONObject) args.get("yawl:data");
+					String reason = (String) args.get("yawl:reason");
+
+					boolean force = false;
+
+					YWorkItem workItem = _engine.getWorkItem(caseId + ":" + taskId);
+					if (workItem != null)
+					{
+
+						YEngine.WorkItemCompletion flag = force ? YEngine.WorkItemCompletion.Force
+								: YEngine.WorkItemCompletion.Normal;
+
+						_engine.completeWorkItem(workItem, data.toString(), reason, flag);
+
+						UUID msg_uuid = UUID.randomUUID();
+
+						out_msg = "{\n \"@\" : \"msg:M" + msg_uuid + "\", \n \"a\" : \"msg:Message\",\n"
+								+ "\"msg:in-reply-to\" : \"" + msg_id + "\",\n" + "\"msg:sender\" : \"" + from
+								+ "\",\n"
+								+ "\"msg:reciever\" : \"pacahon\",\n \"msg:status\" : \"ok\",\n \"msg:result\" : "
+								+ "\"success\"" + "\n}";
 
 					}
 

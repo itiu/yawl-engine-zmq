@@ -1087,7 +1087,7 @@ public class YWorkItem
 		arg.put("a", "yawl:workItem");
 
 		arg.put("yawl:taskId", getTaskID());
-		arg.put("yawl:caseId", getCaseID());
+		arg.put("yawl:caseId", getCaseID() + "");
 
 		if (getTask().getName() != null)
 			arg.put("yawl:taskName", getTask().getName());

@@ -174,7 +174,10 @@ public class ZMQ_listener extends Thread
 						YEngine.WorkItemCompletion flag = force ? YEngine.WorkItemCompletion.Force
 								: YEngine.WorkItemCompletion.Normal;
 
-						_engine.completeWorkItem(workItem, data.toString(), reason, flag);
+						// TODO выводить все полученные от процесса переменные
+						String result = (String) data.get("result");
+
+						_engine.completeWorkItem(workItem, "<result>" + result + "</result>", reason, flag);
 
 						UUID msg_uuid = UUID.randomUUID();
 

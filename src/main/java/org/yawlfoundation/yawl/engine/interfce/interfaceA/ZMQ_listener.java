@@ -4,6 +4,9 @@ import java.io.UnsupportedEncodingException;
 import java.net.ConnectException;
 import java.rmi.RemoteException;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map.Entry;
+import java.util.Set;
 import java.util.UUID;
 
 import org.gost19.pacahon.client.PacahonClient;
@@ -163,6 +166,18 @@ public class ZMQ_listener extends Thread
 					String taskId = (String) args.get("yawl:taskId");
 					String caseId = (String) args.get("yawl:caseId");
 					JSONObject data = (JSONObject) args.get("yawl:data");
+					Set<String> keys = data.keySet();
+					JSONObject vars = null;
+
+					Iterator<String> it = keys.iterator();
+					String section_name = null;
+
+					if (it.hasNext())
+					{
+						section_name = it.next();
+						vars = (JSONObject) data.get(section_name);
+					}
+
 					String reason = (String) args.get("yawl:reason");
 
 					boolean force = false;
@@ -174,10 +189,28 @@ public class ZMQ_listener extends Thread
 						YEngine.WorkItemCompletion flag = force ? YEngine.WorkItemCompletion.Force
 								: YEngine.WorkItemCompletion.Normal;
 
-						// TODO выводить все полученные от процесса переменные
-						String result = (String) data.get("result");
+						String result = null;
+						if (vars != null)
+						{
+							Set<Entry> vars_set = vars.entrySet();
+							Iterator<Entry> it_vars_set = vars_set.iterator();
 
-						_engine.completeWorkItem(workItem, "<result>" + result + "</result>", reason, flag);
+							result = "<" + section_name + ">";
+
+							while (it_vars_set.hasNext())
+							{
+								Entry<String, String> ee = it_vars_set.next();
+								String key = ee.getKey();
+								result += "<" + key + ">";
+								String val = ee.getValue();
+								result += val;
+								result += "</" + key + ">";
+							}
+
+							result += "</" + section_name + ">";
+						}
+
+						_engine.completeWorkItem(workItem, result, reason, flag);
 
 						UUID msg_uuid = UUID.randomUUID();
 

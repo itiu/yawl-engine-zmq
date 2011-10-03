@@ -1116,6 +1116,10 @@ public class YWorkItem
 			if (list != null)
 			{
 				JSONObject data_list = new JSONObject();
+				arg.put("yawl:data", data_list);
+
+				JSONObject data_list_section = new JSONObject();
+				data_list.put(_dataList.getName(), data_list_section);
 
 				for (Object o : list)
 				{
@@ -1123,9 +1127,8 @@ public class YWorkItem
 					String name = child.getName();
 					String value = child.getValue();
 
-					data_list.put(name, value);
+					data_list_section.put(name, value);
 				}
-				arg.put("yawl:data", data_list);
 			}
 		}
 
